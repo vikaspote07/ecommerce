@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "./productdetails.css";
 
-export default function ProductDetails({ products }) {
+export default function ProductDetails({ products, addToCart }) {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
 
@@ -13,11 +13,17 @@ export default function ProductDetails({ products }) {
 
   if (!product) return <p>Loading product details...</p>;
 
+
+  // const handleAddToCart = (id) => {
+    
+  // }
+
+  // console.log(product);
   return (
     <main className="product-details">
       <div className="product-images">
         <img
-          src={product.thumbnail || "https://via.placeholder.com/500"}
+          src={product.thumbnail || product.image || product.preview}
           alt={product.title || "Product Image"}
           className="main-image"
         />
@@ -46,7 +52,12 @@ export default function ProductDetails({ products }) {
           <input type="number" id="quantity" min="1" defaultValue="1" />
         </div>
 
-        <button className="add-to-cart-btn">Add to Cart</button>
+        <button
+          className="add-to-cart-btn"
+          onClick={() => addToCart(product)}
+        >
+          Add to Cart
+        </button>
 
         <div className="product-reviews">
           <h3>Customer Reviews</h3>

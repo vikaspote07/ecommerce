@@ -1,9 +1,8 @@
-import React, { useCallback } from "react";
-import { debounce } from "../../../utils/debounce";
 import { Link } from "react-router-dom";
 import { CiShoppingCart } from "react-icons/ci";
 
-export default function Header({ searchValue }) {
+// eslint-disable-next-line react/prop-types
+export default function Header({ searchValue, cart }) {
   // Validate that searchavalue is a function
   if (typeof searchValue !== "function") {
     console.error("searchavalue prop must be a function");
@@ -54,8 +53,10 @@ export default function Header({ searchValue }) {
             </div>
           </div>
           <div className="cart-icons">
-            {" "}
-            <CiShoppingCart className="cart" /> <p>1</p>
+            <Link to="/cart-list">
+              <CiShoppingCart className="cart" />
+            </Link>
+            {cart.length > 0 && <p>{cart.length}</p>}
           </div>
         </nav>
       </div>

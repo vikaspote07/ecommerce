@@ -4,12 +4,16 @@ import Footer from "./componant/common/footer/Footer";
 import LayoutContainer from "./componant/layout/LayoutContainer";
 import ProductDetails from "./pages/ProductDetails";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Links from "./NavLink/Routes";
+import CartList from "./pages/CartList";
 
 export default function App() {
   const [products, setProducts] = useState([]);
   const [filterdata, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [cart, setCart] = useState([]);
+  const [message, setMessage] = useState(""); // State to store feedback message
 
   async function fetchProducts() {
     setLoading(true);
@@ -30,17 +34,23 @@ export default function App() {
 
       const res1Uniqueid = res1?.products.map((product, index) => ({
         ...product,
-        uniqueid: `productid__${Date.now()}_${index}`,
+        uniqueid: `${
+          product.name ? product.name.slice(0, 4) : product.title.slice(0, 4)
+        }_${product.id}_${index}`,
       }));
 
       const res2Uniqueid = res2?.map((product, index) => ({
         ...product,
-        uniqueid: `productid__${product.id}_${index}`,
+        uniqueid: `${
+          product.name ? product.name.slice(0, 4) : product.title.slice(0, 4)
+        }_${product.id}_${index}`,
       }));
 
       const res3Uniqueid = res3?.map((product, index) => ({
         ...product,
-        uniqueid: `productid__${product.id}_${index}`,
+        uniqueid: `${
+          product.name ? product.name.slice(0, 4) : product.title.slice(0, 4)
+        }_${product.id}_${index}`,
       }));
 
       const mergedProducts = [
@@ -79,15 +89,28 @@ export default function App() {
     }
   };
 
-  console.log(products.category);
-  
-  for (let i of products) {
-    console.log(i.category)
-  }
+  const addToCart = (product) => {
+    const existingProduct = cart.find(
+      (item) => item.uniqueid === product.uniqueid
+    );
 
+    if (existingProduct) {
+      setMessage("Product is already added in cart");
+    } else {
+      setCart((prevCart) => [...prevCart, product]);
+      setMessage("Product added to cart successfully");
+    }
+
+    // Clear the message after a few seconds
+    setTimeout(() => setMessage(""), 3000);
+  };
+
+  console.log(cart)
   return (
     <BrowserRouter>
-      <Header searchValue={filterData} />
+      <Header searchValue={filterData} cart={cart} />
+      {message && <div className="message">{message}</div>}
+      <Links></Links>
       <Routes>
         <Route
           path="/"
@@ -99,7 +122,12 @@ export default function App() {
         />
         <Route
           path="/productdetails/:id"
-          element={<ProductDetails products={products} />}
+          element={<ProductDetails products={products} addToCart={addToCart} />}
+        />
+
+        <Route
+          path="/cart-list"
+          element={<CartList cart={cart} setCart={setCart} />}
         />
       </Routes>
       <Footer />

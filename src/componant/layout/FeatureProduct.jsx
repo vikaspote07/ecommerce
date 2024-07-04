@@ -12,10 +12,10 @@ export default function FeatureProduct({ data }) {
         <div className="product-grid">
           {products?.map((item, index) => (
             <Link to={`/productdetails/${item.uniqueid}`}>
-              <div className="product-card" key={index}>
+              <div className="product-card" key={item.uniqueid}>
                 <img
                   src={item.thumbnail || item.preview || item.image}
-                  alt={item.name || item.preview}
+                  alt={item.name || item.preview || item.image}
                   className="product-image"
                 />
                 <div className="product-info">
